@@ -3,6 +3,7 @@ package camp;
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
+import org.w3c.dom.ls.LSOutput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,20 +168,114 @@ public class CampManagementApplication {
     // 수강생 등록
     private static void createStudent() {
         System.out.println("\n수강생을 등록합니다...");
+        System.out.print("수강생 고유 번호 입력: ");
+        String studentId = sc.next();
+        if (checkDuplicateStudentId(studentId)) {
+            System.out.println("이미 등록된 학생 고유번호입니다. 다시 시도해주세요.");
+            return;
+        }
+
         System.out.print("수강생 이름 입력: ");
         String studentName = sc.next();
         // 기능 구현 (필수 과목, 선택 과목)
 
-        Student student = new Student(sequence(INDEX_TYPE_STUDENT), studentName); // 수강생 인스턴스 생성 예시 코드
-        // 기능 구현
+        List<Subject> selectedSubjects = selectSubjects();
+
+        if (selectedSubjects == null) {
+            System.out.println("과목 선택이 올바르지 않습니다. 등록을 취소합니다.");
+            return;
+        }
+
+        Student student = new Student(studentId, studentName, selectedSubjects); // 수강생 인스턴스 생성 코드
+
+        studentStore.add(student);
         System.out.println("수강생 등록 성공!\n");
     }
 
+    private static List<Subject> selectSubjects() {
+        //수강할 과목을 선택하는 로직
+        List<Subject> selectedSubjects = new ArrayList<>();
+        System.out.println("과목 선택: 최소 3개의 필수과목과 2개의 선택과목을 선택해야 합니다.");
+        System.out.println("필수 과목: 1)Java 2)객체지향 3)Spring 4)JPA 5)MySQL");
+        System.out.println("선택 과목: 6)디자인 패턴 7)Spring Security 8)Redis 9)MongoDB");
+        System.out.print("선택할 과목의 번호를 입력하세요 (예: 1 2 3 6 7): ");
+        sc.nextLine(); // Buffer Clear
+        String[] inputs = sc.nextLine().split(" ");
+        int mandatoryCount = 0, choiceCount = 0;
+
+        for (String input : inputs) {
+            try {
+                int index = Integer.parseInt(input) - 1;
+                if (index < 0 || index >= subjectStore.size()) {
+                    System.out.println("잘못된 과목 번호입니다: " + input);
+                    return null;
+                }
+
+                Subject subject = subjectStore.get(index);
+                if (SUBJECT_TYPE_MANDATORY.equals(subject.getSubjectType())) {
+                    mandatoryCount++;
+                } else if (SUBJECT_TYPE_CHOICE.equals(subject.getSubjectType())) {
+                    choiceCount++;
+                }
+                selectedSubjects.add(subject);
+            } catch (NumberFormatException e) {
+                System.out.println("잘못된 입력입니다: " + input);
+                return null;
+            }
+        }
+
+        if (mandatoryCount >= 3 && choiceCount >= 2) {
+            return selectedSubjects;
+        } else {
+            System.out.println("필수 과목 3개와 선택 과목 2개 조건을 만족하지 않습니다.");
+            return null;
+        }
+    }
+
+
+
+        // 중복된 학생 ID 확인
+//        private static boolean checkDuplicateStudentId(String studentId) {
+//            for (Student student : studentStore) {
+//                if (student.getStudentId().equals(studentId)) {
+//            return true;
+//          }
+//         }
+//     return false;
+//    }
+
+    private static boolean checkDuplicateStudentId(String studentId) {
+        return studentStore.stream().anyMatch(s -> s.getStudentId().equals(studentId));
+    }
+
+
+
     // 수강생 목록 조회
+//    private static void inquireStudent() {
+//        System.out.println("\n수강생 목록을 조회합니다...");
+//        if (studentStore.isEmpty()) {
+//            System.out.println("등록된 수강생이 없습니다.");
+//        } else {
+//            System.out.println("수강생 목록:");
+//            System.out.println("번호\t이름");
+//            for (Student student : studentStore) {
+//                System.out.println(student.getStudentId() + "\t" + student.getStudentName());
+//            }
+//        }
+//    }
+
     private static void inquireStudent() {
-        System.out.println("\n수강생 목록을 조회합니다...");
-        // 기능 구현
-        System.out.println("\n수강생 목록 조회 성공!");
+        if (studentStore.isEmpty()) {
+            System.out.println("등록된 수강생이 없습니다.");
+        } else {
+            System.out.println("등록된 수강생 목록:");
+            for (Student student : studentStore) {
+                System.out.println("ID: " + student.getStudentId() + ", 이름: " + student.getStudentName());
+                for (Subject subject : student.getSubjects()) {
+                    System.out.println("- " + subject.getSubjectName());
+                }
+            }
+        }
     }
 
     private static void displayScoreView() {

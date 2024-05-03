@@ -16,7 +16,8 @@ public class Subject {
         return subjectId;
     }
 
-    public String getSubjectName() {
+    public String getSubjectName()
+    {
         return subjectName;
     }
 
