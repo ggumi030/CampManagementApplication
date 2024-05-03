@@ -234,15 +234,7 @@ public class CampManagementApplication {
 
 
 
-        // 중복된 학생 ID 확인
-//        private static boolean checkDuplicateStudentId(String studentId) {
-//            for (Student student : studentStore) {
-//                if (student.getStudentId().equals(studentId)) {
-//            return true;
-//          }
-//         }
-//     return false;
-//    }
+
 
     private static boolean checkDuplicateStudentId(String studentId) {
         return studentStore.stream().anyMatch(s -> s.getStudentId().equals(studentId));
@@ -250,19 +242,7 @@ public class CampManagementApplication {
 
 
 
-    // 수강생 목록 조회
-//    private static void inquireStudent() {
-//        System.out.println("\n수강생 목록을 조회합니다...");
-//        if (studentStore.isEmpty()) {
-//            System.out.println("등록된 수강생이 없습니다.");
-//        } else {
-//            System.out.println("수강생 목록:");
-//            System.out.println("번호\t이름");
-//            for (Student student : studentStore) {
-//                System.out.println(student.getStudentId() + "\t" + student.getStudentName());
-//            }
-//        }
-//    }
+
 
     private static void inquireStudent() {
 
