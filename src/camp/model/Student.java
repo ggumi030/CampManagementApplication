@@ -1,12 +1,24 @@
 package camp.model;
 
+import java.util.List;
+
 public class Student {
     private String studentId;
     private String studentName;
 
-    public Student(String seq, String studentName) {
+    private List<Subject> subjects; // 수강한 과목 목록
+
+
+
+
+
+
+    public Student(String seq, String studentName, List<Subject> subjects) {
         this.studentId = seq;
         this.studentName = studentName;
+        this.subjects = subjects;
+
+
     }
 
     // Getter
@@ -18,4 +30,11 @@ public class Student {
         return studentName;
     }
 
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+
 }
+
+
