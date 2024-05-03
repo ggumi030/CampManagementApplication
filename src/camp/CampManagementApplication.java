@@ -265,17 +265,7 @@ public class CampManagementApplication {
 //    }
 
     private static void inquireStudent() {
-        if (studentStore.isEmpty()) {
-            System.out.println("등록된 수강생이 없습니다.");
-        } else {
-            System.out.println("등록된 수강생 목록:");
-            for (Student student : studentStore) {
-                System.out.println("ID: " + student.getStudentId() + ", 이름: " + student.getStudentName());
-                for (Subject subject : student.getSubjects()) {
-                    System.out.println("- " + subject.getSubjectName());
-                }
-            }
-        }
+
     }
 
     private static void displayScoreView() {
@@ -327,11 +317,7 @@ public class CampManagementApplication {
 
     // 수강생의 특정 과목 회차별 등급 조회
     private static void inquireRoundGradeBySubject() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        // 기능 구현 (조회할 특정 과목)
-        System.out.println("회차별 등급을 조회합니다...");
-        // 기능 구현
-        System.out.println("\n등급 조회 성공!");
+
     }
 
 }
