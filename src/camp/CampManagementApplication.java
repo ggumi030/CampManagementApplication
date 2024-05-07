@@ -17,7 +17,7 @@ import java.util.Scanner;
  * 프로젝트 구조를 변경하거나 기능을 추가해도 괜찮습니다!
  * 구현에 도움을 주기위한 Base 프로젝트입니다. 자유롭게 이용해주세요!
  * 
- * 
+ * 안녕
  * 
  * 수강생의 과목별 시험 회차 및 점수 등록 , 수강생의 과목별 회차 점수 수정 -> 내가 구현할 것
  */
@@ -286,6 +286,7 @@ public class CampManagementApplication {
     private static void createScore() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         System.out.println("시험 점수를 등록합니다...");
+
         // 기능 구현
         System.out.println("\n점수 등록 성공!");
     }
