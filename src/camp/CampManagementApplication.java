@@ -321,8 +321,7 @@ public class CampManagementApplication {
 
         //해당하는 과목, 회차의 점수 수정하기
         for(int i =0; i < students.get(studentId).size();i++){
-            if(Objects.equals(scoreId,students.get(studentId).get(i).getScoreId())){ //회차
-                if(Objects.equals(subjectId,students.get(studentId).get(i).getsubjectId())){ //과목명
+                    //과목명
                     //수정??
                     //students.get(studentId).get(i).
 
@@ -343,8 +342,6 @@ public class CampManagementApplication {
                             break;
                         }
                     }
-                }
-            }
         }
 
 
