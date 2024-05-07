@@ -30,6 +30,7 @@ public class CampManagementApplication {
             System.out.println("2. 점수 관리");
             System.out.println("3. 프로그램 종료");
             System.out.print("관리 항목을 선택하세요...");
+            System.out.println();
             int input = sc.nextInt();
 
             switch (input) {
@@ -53,6 +54,7 @@ public class CampManagementApplication {
             System.out.println("2. 수강생 목록 조회");
             System.out.println("3. 메인 화면 이동");
             System.out.print("관리 항목을 선택하세요...");
+            System.out.println();
             int input = sc.nextInt();
 
             switch (input) {
@@ -129,9 +131,9 @@ public class CampManagementApplication {
         // 목록 조회
         List<Student> students = this.studentStore.findAll();
         // string format
-        System.out.printf("%s | %s\n", "고유번호", "이름");
+        System.out.printf("%5s | %5s\n", "고유번호", "이  름");
         for (Student student : students) {
-            System.out.printf("%s | %s\n", student.getStudentId(), student.getStudentName());
+            System.out.printf("%6s번 | %4s\n", student.getStudentId(), student.getStudentName());
         }
     }
 
