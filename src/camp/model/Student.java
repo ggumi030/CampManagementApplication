@@ -46,5 +46,3 @@ public class Student {
         return this.subjects.stream().filter(Subject::isChoice).count() >= 2;
     }
 }
-
-

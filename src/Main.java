@@ -1,7 +1,12 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import camp.CampManagementApplication;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("하이이이이이이이이이2");
+        CampManagementApplication campManagementApplication = new CampManagementApplication();
+        try {
+            campManagementApplication.displayMainView();
+        } catch (InterruptedException e) {
+            System.out.println("\n오류 발생!\n프로그램을 종료합니다.");
+        }
     }
 }
