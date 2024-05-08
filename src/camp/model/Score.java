@@ -1,13 +1,15 @@
 package camp.model;
 
+import camp.ScoreManegement.ScoreToGradeConverstion;
+
 public class Score {
     private int scoreId; //회차 점수 고유 id
     private int subjectId; //과목id
     private int score; //시험점수
-    private char grade; //시험 등급 (A,B,C,D...)
+    private ScoreToGradeConverstion grade; //시험 등급 (A,B,C,D...)
 
 
-    public Score(int scoreId, int subjectId, int score, char grade) {
+    public Score(int scoreId, int subjectId, int score, ScoreToGradeConverstion grade) {
         this.scoreId = scoreId;
         this.subjectId = subjectId;
         this.score = score;
@@ -28,7 +30,7 @@ public class Score {
         return this.score;
     }
 
-    public char getGrade() {
+    public ScoreToGradeConverstion getGrade() {
         return this.grade;
     }
 
@@ -37,7 +39,7 @@ public class Score {
         this.score = score;
     }
 
-    public void setGrade(char grade) {
+    public void setGrade(ScoreToGradeConverstion grade) {
         this.grade = grade;
     }
 
