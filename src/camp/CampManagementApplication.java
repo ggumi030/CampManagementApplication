@@ -75,8 +75,8 @@ public class CampManagementApplication {
         //
         System.out.print("수강생 이름 입력: ");
         String studentName = sc.next();
-        // 기능 구현 (필수 과목, 선택 과목)
 
+        // 기능 구현 (필수 과목, 선택 과목)
         List<Subject> selectedSubjects = selectSubjects();
 
         if (selectedSubjects == null) {
@@ -88,7 +88,7 @@ public class CampManagementApplication {
 
         // is valid subject?
         if (!student.isValidSubjects()) {
-            System.out.println("과목 선택 잘못함");
+            System.out.println("과목 선택을 잘못하셨습니다");
             return;
         }
 
@@ -103,11 +103,18 @@ public class CampManagementApplication {
 
         // TODO(민혁님)
         // 필수과목: id)name id)name id)name id)name
-        System.out.println("필수 과목: subjectId)subjectName 2)객체지향 3)Spring 4)JPA 5)MySQL");
+        System.out.println("필수 과목: ");
         List<Subject> mandatoryList = all.stream().filter(Subject::isMandatory).toList();
-        System.out.println("선택 과목: subjectId)subjectName 7)Spring Security 8)Redis 9)MongoDB");
+        for (Subject subject : mandatoryList) {
+            System.out.printf("%s) %s ", subject.getSubjectId(), subject.getSubjectName());
+        }
+        System.out.println("\n선택 과목: ");
         List<Subject> choiceList = all.stream().filter(Subject::isChoice).toList();
-        System.out.print("선택할 과목의 번호를 입력하세요 (예: 1 2 3 6 7): ");
+        for (Subject subject : choiceList) {
+            System.out.printf("%s) %s ", subject.getSubjectId(), subject.getSubjectName());
+        }
+
+        System.out.print("\n선택할 과목의 번호를 입력하세요 (예: 1 2 3 6 7): ");
         sc.nextLine(); // Buffer Clear
         String[] inputs = sc.nextLine().split(" ");
 
