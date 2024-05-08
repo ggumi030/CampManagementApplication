@@ -1,14 +1,11 @@
 package camp.ScoreManegement;
-
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
 import camp.store.ScoreStore;
 import camp.store.StudentStore;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+
+import java.util.*;
 
 public class ScoreManager {
     public final ScoreStore scoreStore;
@@ -69,11 +66,24 @@ public class ScoreManager {
             System.out.println("점수는 1~100점까지만 입력 할 수 있습니다.");
         }
     }
+
+    public String findStudentId(String studentId){ //수강생 고유번호 입력받으면 리스트에 있는지 확인하는 메서드
+        List<Student> students = this.studentStore.findAll();
+        for (Student student : students){
+            if(student.getStudentId().equals(studentId)){
+                return student.getStudentId();
+            }
+        }
+        System.out.println("캠프에 등록되지 않은 학생입니다.");
+        return null;
+    }
+
     public void createScore() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         List<Student> students = this.studentStore.findAll();
         for (Student student : students){
             if (studentId.equals(student.getStudentId())){
+
                 System.out.println("[student ID: " + studentId+"] 등록된"+ student.getStudentName() +"의 과목정보를 출력합니다." ) ;
                 List<Subject> subjects = student.getSubjects();
                 for(Subject subject : subjects) {
@@ -95,7 +105,7 @@ public class ScoreManager {
                 scoreStore.save(studentId, studentScore);
 
                 System.out.println("\n점수 등록 성공!");
-            }else {
+      }else {
                 System.out.println("캠프에 등록되지 않은 학생입니다");
                 return;
             }
@@ -134,31 +144,81 @@ public class ScoreManager {
 
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
 
+        if(Objects.equals(null,findStudentId(studentId))){
+            return;
+        }
+
         // 기능 구현 (조회할 특정 과목)
         System.out.println("특정 과목의 회차별 등급을 조회합니다...");
         int subjectId = getRightSubjectId();
 
-        //선택한 과목 id만 출력하도록 수정
+        List<Subject> subjects = getSelectedList();
+        checkExistSubject(scores ,subjects,subjectId,studentId);
+
+
+//        //선택한 과목 id만 출력하도록 수정
+//        List<Student> students = this.studentStore.findAll(); //1
+//
+//        for (Student student : students) { //1
+//            List<Subject> subjects = student.getSubjects(); //1
+//            for(Subject subject : subjects) { //2
+//                if (String.valueOf(subjectId).equals(subject.getSubjectId())) { //2
+//                    for (int i = 0; i < scores.get(studentId).size(); i++) { //3
+//                        if(scores.get(studentId).get(i).getsubjectId() == subjectId) {//3
+//
+//                            System.out.println(scores.get(studentId).get(i).getScoreId() + "회차 " + "등급 : " + scores.get(studentId).get(i).getGrade());//3
+//
+//                        }
+//                    }
+//                    System.out.println("\n등급 조회 성공!");
+//                    return;
+//                }
+//            }
+//
+//        }
+//        System.out.println("등록된 해당 과목이 없습니다");
+
+    }
+
+    //Create / inquire
+
+
+    //inquire
+    //1 student가 선택한 subject list를 가져오는 함수
+    public List<Subject> getSelectedList(){
         List<Student> students = this.studentStore.findAll();
+        List<Subject> subjects = List.of();
 
         for (Student student : students) {
-            List<Subject> subjects = student.getSubjects();
-            for(Subject subject : subjects) {
-                if (String.valueOf(subjectId).equals(subject.getSubjectId())) {
-                    for (int i = 0; i < scores.get(studentId).size(); i++) {
-                        if(scores.get(studentId).get(i).getsubjectId() == subjectId) {
-                            
-                            System.out.println(scores.get(studentId).get(i).getScoreId() + "회차 " + "등급 : " + scores.get(studentId).get(i).getGrade());
+            subjects = student.getSubjects();
+        }
 
-                        }
-                    }
-                    System.out.println("\n등급 조회 성공!");
-                    return;
-                }
+        return subjects;
+    }
+
+
+    //2 선택한 subject 중에서 입력된 subjectid와 같은 게 있는지 확인하는 함수
+    public void checkExistSubject(HashMap<String, ArrayList<Score>> scores ,List<Subject> subjects,int subjectId,String studentId){
+        for(Subject subject : subjects) {
+            if (String.valueOf(subjectId).equals(subject.getSubjectId())) {
+                showAllGrade(scores,subjectId,studentId);
+                System.out.println("\n등급 조회 성공!");
+                return;
             }
 
         }
         System.out.println("등록된 해당 과목이 없습니다");
-
     }
+
+    //3 입력된 subjectid와 같은 Score 객체에의 모든 회차와 등급 출력하는 함수
+    public void showAllGrade(HashMap<String, ArrayList<Score>> scores ,int subjectId,String studentId){
+        for (int i = 0; i < scores.get(studentId).size(); i++) { //3
+            if(scores.get(studentId).get(i).getsubjectId() == subjectId) {//3
+
+                System.out.println(scores.get(studentId).get(i).getScoreId() + "회차 " + "등급 : " + scores.get(studentId).get(i).getGrade());//3
+
+            }
+        }
+    }
+
 }
