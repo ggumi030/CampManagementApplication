@@ -1,18 +1,16 @@
 package camp.store;
 
 import camp.model.Score;
-import camp.model.Student;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-public class ScoreStore {
+public class ScoreMapStore {
     //key : studentID  value : Score => HashMap
     HashMap<String, ArrayList<Score>> scores;
     //Score : 회차 과목 점수 등급 수강생id
 
-    public ScoreStore(){
+    public ScoreMapStore(){
         this.scores = new HashMap<>();
     }
 
