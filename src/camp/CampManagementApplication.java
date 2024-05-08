@@ -36,9 +36,9 @@ public class CampManagementApplication {
             int input = sc.nextInt();
 
             switch (input) {
-                case 1 -> displayStudentView(); // 수강생 관리
-                case 2 -> displayScoreView(); // 점수 관리
-                case 3 -> flag = false; // 프로그램 종료
+                case 1 -> displayStudentView();
+                case 2 -> displayScoreView();
+                case 3 -> flag = false;
                 default -> {
                     System.out.println("잘못된 입력입니다.\n되돌아갑니다!");
                     Thread.sleep(2000);
@@ -60,8 +60,8 @@ public class CampManagementApplication {
             int input = sc.nextInt();
 
             switch (input) {
-                case 1 -> createStudent(); // 수강생 등록
-                case 2 -> inquireStudent(); // 수강생 목록 조회
+                case 1 -> createStudent();
+                case 2 -> inquireStudent();
                 case 3 -> {
                     return;
                 }
@@ -73,14 +73,11 @@ public class CampManagementApplication {
         }
     }
 
-    // 수강생 등록
     private void createStudent() {
         System.out.println("\n수강생을 등록합니다...");
-        //
         System.out.print("수강생 이름 입력: ");
         String studentName = sc.next();
 
-        // 기능 구현 (필수 과목, 선택 과목)
         List<Subject> selectedSubjects = selectSubjects();
 
         if (selectedSubjects == null) {
@@ -88,9 +85,9 @@ public class CampManagementApplication {
             return;
         }
 
-        Student student = new Student(studentName, selectedSubjects); // 수강생 인스턴스 생성 코드
+        Student student = new Student(studentName, selectedSubjects);
 
-        // is valid subject?
+
         if (!student.isValidSubjects()) {
             System.out.println("과목 선택을 잘못하셨습니다");
             return;
@@ -105,8 +102,6 @@ public class CampManagementApplication {
         System.out.println("과목 선택: 최소 3개의 필수과목과 2개의 선택과목을 선택해야 합니다.");
         List<Subject> all = this.subjectStore.findAll();
 
-        // TODO(민혁님)
-        // 필수과목: id)name id)name id)name id)name
         System.out.println("필수 과목: ");
         List<Subject> mandatoryList = all.stream().filter(Subject::isMandatory).toList();
         for (Subject subject : mandatoryList) {
@@ -119,7 +114,7 @@ public class CampManagementApplication {
         }
 
         System.out.print("\n선택할 과목의 번호를 입력하세요 (예: 1 2 3 6 7): ");
-        sc.nextLine(); // Buffer Clear
+        sc.nextLine();
         String[] inputs = sc.nextLine().split(" ");
 
         List<Subject> selectedSubjects = new ArrayList<>();
@@ -135,11 +130,8 @@ public class CampManagementApplication {
         return selectedSubjects;
     }
 
-    // TODO: 꾸미기(성훈님)
     private void inquireStudent() {
-        // 목록 조회
         List<Student> students = this.studentStore.findAll();
-        // string format
         System.out.printf("%5s | %5s\n", "고유번호", "이  름");
         for (Student student : students) {
             System.out.printf("%6s번 | %4s\n", student.getStudentId(), student.getStudentName());
@@ -159,10 +151,10 @@ public class CampManagementApplication {
             int input = sc.nextInt();
 
             switch (input) {
-                case 1 -> createScore(); // 수강생의 과목별 시험 회차 및 점수 등록
-                case 2 -> updateRoundScoreBySubject(); // 수강생의 과목별 회차 점수 수정
-                case 3 -> inquireRoundGradeBySubject(); // 수강생의 특정 과목 회차별 등급 조회
-                case 4 -> flag = false; // 메인 화면 이동
+                case 1 -> createScore();
+                case 2 -> updateRoundScoreBySubject();
+                case 3 -> inquireRoundGradeBySubject();
+                case 4 -> flag = false;
                 default -> {
                     System.out.println("잘못된 입력입니다.\n메인 화면 이동...");
                     flag = false;
@@ -270,19 +262,8 @@ public class CampManagementApplication {
 
     // 수강생의 과목별 시험 회차 및 점수 등록
     private void createScore() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId();
         System.out.println("시험 점수를 등록합니다...");
-        // 기능 구현
-        // String(key) = StudentId, arraylist(value) = 회차,과목ID, 시험점수, 등급
-        //value  Score => 회차1 과목java 점수50 등급C
-        // Score => 회차2 과목Spring 점수80 등급B
-        // scores.get(studentId)
-        //key (studentId) => key
-        // 등록되지 않은 student id처리
-        // scores.containsKey(studentId) == key값이 1이 있냐-> T==> 점수 등록할수있게/ F ==> 등록이 안된 사용자입니다(key new)
-
-        //id : key값 없으면 새로 생성
-        // if containsKey(key) 확인
         scoreStore.checkExistKey(studentId);
 
 
@@ -330,18 +311,6 @@ public class CampManagementApplication {
 
         //해당하는 과목, 회차의 점수 수정하기
         for(int i =0; i < students.get(studentId).size();i++){
-                    //과목명
-                    //수정??
-                    //students.get(studentId).get(i).
-
-                    //Hash map
-                    //1 -> [Score{회차, 과목, 점수, 등급},
-                    //      Score{회차, 과목, 점수, 등급},
-                    //      Score{회차, 과목, 점수, 등급}]
-                    //score1.getScore()// 과거 점수
-
-                    //students.get(studentId).get(i).getsubjectId().setScore(newScore);
-                    //
 
                     for(Score score1 : students.get(studentId)){
                         if(score1.getScoreId() == (scoreId) && score1.getsubjectId() == (subjectId)){
@@ -352,11 +321,6 @@ public class CampManagementApplication {
                         }
                     }
         }
-
-
-
-        //
-
 
         System.out.println("시험 점수를 수정합니다...");
         // 기능 구현
