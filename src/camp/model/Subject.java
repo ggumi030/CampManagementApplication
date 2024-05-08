@@ -5,6 +5,7 @@ public class Subject {
     private final Type subjectType;
     private String subjectId;
 
+
     public Subject(String seq, String subjectName, Type subjectType) {
         this.subjectId = seq;
         this.subjectName = subjectName;
@@ -35,7 +36,7 @@ public class Subject {
     }
 
     public boolean isChoice() {
-        return this.subjectType.equals(Type.MANDATORY);
+        return this.subjectType.equals(Type.CHOICE);
     }
 
 
