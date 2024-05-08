@@ -2,18 +2,18 @@ package camp.ScoreManegement;
 import camp.model.Score;
 import camp.model.Student;
 import camp.model.Subject;
-import camp.store.ScoreStore;
+import camp.store.ScoreMapStore;
 import camp.store.StudentStore;
 
 import java.util.*;
 
 public class ScoreManager {
-    public final ScoreStore scoreStore;
+    public final ScoreMapStore scoreStore;
     public final StudentStore studentStore;
     Scanner sc;
 
     public ScoreManager( StudentStore studentStore ) {
-        this.scoreStore = new ScoreStore();
+        this.scoreStore = new ScoreMapStore();
         this.studentStore = studentStore;
         sc = new Scanner(System.in);
     }

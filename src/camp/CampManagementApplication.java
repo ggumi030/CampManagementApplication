@@ -5,7 +5,7 @@ import camp.model.Student;
 import camp.model.Subject;
 import camp.store.StudentStore;
 import camp.store.SubjectStore;
-import camp.store.ScoreStore;
+import camp.store.ScoreMapStore;
 
 import java.util.*;
 
@@ -13,14 +13,14 @@ public class CampManagementApplication {
     private static Scanner sc;
     private final StudentStore studentStore;
     private final SubjectStore subjectStore;
-    private final ScoreStore scoreStore;
+    private final ScoreMapStore scoreStore;
     private final ScoreManager scoreManager;
 
 
     public CampManagementApplication() {
         this.studentStore = new StudentStore();
         this.subjectStore = new SubjectStore();
-        this.scoreStore = new ScoreStore();
+        this.scoreStore = new ScoreMapStore();
         this.scoreManager = new ScoreManager(this.studentStore);
         sc = new Scanner(System.in);
     }
