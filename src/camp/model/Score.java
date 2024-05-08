@@ -1,7 +1,7 @@
 package camp.model;
 
 public class Score {
-    private int scoreId; //회차
+    private int scoreId; //회차 점수 고유 id
     private int subjectId; //과목id
     private int score; //시험점수
     private char grade; //시험 등급 (A,B,C,D...)
