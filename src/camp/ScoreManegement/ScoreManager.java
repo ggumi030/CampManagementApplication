@@ -98,7 +98,7 @@ public class ScoreManager {
 
                 int score = getRightScore();
 
-                ScoreToGradeConverstion grade = ScoreToGradeConverstion.getGrade(subjectId ,score);
+                ScoreToGradeConversation grade = ScoreToGradeConversation.getGrade(subjectId ,score);
 
                 Score studentScore = new Score(scoreId, subjectId, score, grade);
 
@@ -126,7 +126,7 @@ public class ScoreManager {
             for(Score score1 : students.get(studentId)){
                 if(score1.getScoreId() == (scoreId) && score1.getsubjectId() == (subjectId)){
                     score1.setScore(newScore); //setScore로 해보세여 !!
-                    ScoreToGradeConverstion newGrade = ScoreToGradeConverstion.getGrade(subjectId ,newScore);
+                    ScoreToGradeConversation newGrade = ScoreToGradeConversation.getGrade(subjectId ,newScore);
                     score1.setGrade(newGrade);
                     break;
                 }
