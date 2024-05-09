@@ -4,11 +4,12 @@ import camp.model.Score;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ScoreMapStore {
 
-    HashMap<String, ArrayList<Score>> scores;
-
+    Map<String, List<Score>> scores;
 
     public ScoreMapStore(){
         this.scores = new HashMap<>();
@@ -26,8 +27,11 @@ public class ScoreMapStore {
         }
     }
 
-
-    public HashMap<String,ArrayList<Score>> findAll() {
+    public Map<String, List<Score>> findAll() {
         return this.scores;
+    }
+
+    public List<Score> findScoresByStudentId(String studentId) {
+        return this.scores.get(studentId);
     }
 }

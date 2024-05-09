@@ -1,6 +1,6 @@
 package camp.ScoreManegement;
 
-public enum ScoreToGradeConversation {
+public enum ScoreToGrade {
     A,
     B,
     C,
@@ -8,8 +8,7 @@ public enum ScoreToGradeConversation {
     F,
     N;
 
-    //등급 enum
-    public static ScoreToGradeConversation getGrade(int subjectId, int score) {
+    public static ScoreToGrade getGrade(int subjectId, int score) {
         if (subjectId > 5) {//6-9 선택
             if (score > 89) {
                 return A;
@@ -40,5 +39,4 @@ public enum ScoreToGradeConversation {
             }
         }
     }
-
 }

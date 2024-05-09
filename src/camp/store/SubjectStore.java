@@ -57,6 +57,7 @@ public class SubjectStore extends AbstractStore<Subject> {
                         "MongoDB",
                         Subject.Type.CHOICE
                 )));
+
     }
 
     @Override

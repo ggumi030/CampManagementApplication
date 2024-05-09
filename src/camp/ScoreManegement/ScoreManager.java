@@ -21,14 +21,11 @@ public class ScoreManager {
         sc = new Scanner(System.in);
     }
 
-    //수강생 쪽으로 이동
-    //수강생 번호 입력
     public String getStudentId() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         return sc.next();
     }
 
-    //범위내 회차 입력 (1~10)
     public int getRightScoreId(){
         int scoreId;
         while (true) {
@@ -42,8 +39,7 @@ public class ScoreManager {
             System.out.println("회차는 1~10까지 입력할 수 있습니다.");
         }
     }
-    //과목 쪽으로 이동
-    //범위내 과목id 입력 (1 ~9)
+
     public int getRightSubjectId() {
         int subjectId;
         while (true) {
@@ -57,7 +53,7 @@ public class ScoreManager {
             System.out.println("과목id는 1~9까지 입력할 수 있습니다.");
         }
     }
-    //범위내 점수 입력 (1 ~ 100)
+
     public int getRightScore() {
         int score;
         while (true) {
@@ -72,97 +68,117 @@ public class ScoreManager {
         }
     }
 
-    //수강생 쪽으로 이동
-    public String findStudentId(String studentId){ //수강생 고유번호 입력받으면 리스트에 있는지 확인하는 메서드
-        List<Student> students = this.studentStore.findAll();
-        for (Student student : students){
-            if(student.getStudentId().equals(studentId)){
-                return student.getStudentId();
-            }
+    public String findStudentId(String studentId){
+        Optional<Student> foundUser = this.studentStore.findById(studentId);
+        if (foundUser.isPresent()) {
+            return foundUser.get().getStudentId();
         }
+
         System.out.println("캠프에 등록되지 않은 학생입니다.");
         return null;
-    }
 
+    }
+    
     public void createScore() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
-        //예외처리 : 등록된거 또 등록하면 안 되게 =>완료
-        List<Student> students = this.studentStore.findAll();
-        for (Student student : students){
-            if (studentId.equals(student.getStudentId())) {
-
-                System.out.println("[student ID: " + studentId + "] " + student.getStudentName() + "가 선택한 과목정보를 출력합니다.");
-                List<Subject> subjects = student.getSubjects();
-                for (Subject subject : subjects) {
-                    System.out.println(subject.getSubjectId() + ". " + subject.getSubjectName());
-                }
-
-                scoreStore.checkExistKey(studentId);
-                int subjectId = getRightSubjectId();
-                int scoreId = getRightScoreId();
-                int score = getRightScore();
-                ScoreToGradeConversation grade = ScoreToGradeConversation.getGrade(subjectId, score);
-
-                Score studentScore = new Score(scoreId, subjectId, score, grade);
-                scoreStore.save(studentId, studentScore);
-                System.out.println("\n점수 등록 성공!");
-
-            }
-        }
-        findStudentId(studentId);
-    }
-    // 수강생의 과목별 회차 점수 수정
-    public void updateRoundScoreBySubject() {
-        //예외처리 : 등록되지 않은 과목 수정 불가하게
-        HashMap<String, ArrayList<Score>> scores = this.scoreStore.findAll();
-        System.out.println("시험 점수를 수정합니다...");
         String studentId = getStudentId();
-
         List<Student> students = this.studentStore.findAll();
-        for (Student student : students){
-            if (studentId.equals(student.getStudentId())) {
-                System.out.println("[student ID: " + studentId + "] " + student.getStudentName() + "가 점수를 등록한 과목정보를 출력합니다.");
-                List<Subject> subjects = student.getSubjects();
-                for (Subject subject : subjects) {
-                    for (int i = 0; i < scores.get(studentId).size(); i++) { //3
+        Optional<Student> optionalStudent = this.studentStore.findById(studentId);
 
-                        if(Objects.equals(String.valueOf(scores.get(studentId).get(i).getsubjectId()),subject.getSubjectId())) {//3
-                            System.out.println("[" + subject.getSubjectName() + "] " + scores.get(studentId).get(i).getScoreId() + "회차 " + "점수 : " + scores.get(studentId).get(i).getScore() + " ");// 선택한 과목 점수 전체 출력
+        if (optionalStudent.isEmpty()) {
+            System.out.println("캠프에 등록되지 않은 학생입니다.");
+            return;
+        }
 
-                        }
-                    }
+        Student student = optionalStudent.get();
+
+        System.out.println("[student ID: " + student.getStudentId() + "] " + student.getStudentName() + "가 선택한 과목정보를 출력합니다.");
+
+        student.getSubjects()
+            .forEach(subject -> System.out.println(subject.getSubjectId() + ". " + subject.getSubjectName()));
+
+        scoreStore.checkExistKey(studentId);
+        int subjectId = getRightSubjectId();
+        Optional<Subject> subjectOptional = student.getSubjects().stream()
+                .filter(s -> s.getSubjectId().equals("" + subjectId))
+                .findFirst();
+        if (subjectOptional.isEmpty()) {
+            System.out.println("선택하지 않은 과목입니다");
+            return;
+        }
+        int scoreId = getRightScoreId();
+        int score = getRightScore();
+
+
+
+        ScoreToGrade grade = ScoreToGrade.getGrade(subjectId, score);
+
+        Score studentScore = new Score(scoreId, subjectId, score, grade);
+        scoreStore.save(student.getStudentId(), studentScore);
+        System.out.println("\n점수 등록 성공!");
+    }
+
+    public void updateRoundScoreBySubject() {
+        Optional<Student> optionalStudent = this.studentStore.findById(getStudentId());
+        if (optionalStudent.isEmpty()) {
+            System.out.println("캠프에 등록되지 않은 학생입니다.");
+            return;
+        }
+        
+        Student student = optionalStudent.get();
+        List<Score> scores = this.scoreStore.findScoresByStudentId(student.getStudentId());
+
+        System.out.println("시험 점수를 수정합니다...");
+        System.out.println("[student ID: " + student.getStudentId() + "] " + student.getStudentName() + "가 점수를 등록한 과목정보를 출력합니다.");
+        List<Subject> subjects = student.getSubjects();
+
+        for (Subject subject : subjects) {
+            for (int i = 0; i < scores.size(); i++) {
+                if(Objects.equals(String.valueOf(scores.get(i).getSubjectId()),subject.getSubjectId())) {
+                    System.out.println("[" + subject.getSubjectName() + "] " + scores.get(i).getScoreId() + "회차 " + "점수 : " + scores.get(i).getScore() + " ");
                 }
             }
-
         }
+
         int subjectId = getRightSubjectId();
+
+        Optional<Subject> subjectOptional = student.getSubjects().stream()
+                .filter(s -> s.getSubjectId().equals("" + subjectId))
+                .findFirst();
+        if (subjectOptional.isEmpty()) {
+            System.out.println("선택하지 않은 과목");
+            return;
+        }
         int scoreId = getRightScoreId();
+
+        List<Score> subjectScores = scores.stream()
+            .filter(score -> score.getSubjectId() == subjectId)
+            .toList();
+        Optional<Score> optionalScore = subjectScores.stream()
+            .filter(score -> score.getScoreId() == scoreId)
+            .findFirst();
+        if (optionalScore.isEmpty()) {
+            System.out.println("등록되지 않은 회차");
+            return;
+        }
+        Score score = optionalScore.get();
+
         int newScore = getRightScore();
 
-        for (int i = 0; i < scores.get(studentId).size(); i++) {
-            for (Score score1 : scores.get(studentId)) {
-                if (score1.getScoreId() == (scoreId) && score1.getsubjectId() == (subjectId)) {
-                    score1.setScore(newScore);
-                    ScoreToGradeConversation newGrade = ScoreToGradeConversation.getGrade(subjectId, newScore);
-                    score1.setGrade(newGrade);
-                    break;
-                }
-            }
-        }
+        score.setScore(newScore);
+        ScoreToGrade newGrade = ScoreToGrade.getGrade(subjectId, newScore);
+        score.setGrade(newGrade);
         System.out.println("\n점수 수정 성공!");
     }
 
     // 수강생의 특정 과목 회차별 등급 조회
     public void inquireRoundGradeBySubject() {
-        HashMap<String, ArrayList<Score>> scores = this.scoreStore.findAll();
+        Map<String, List<Score>> scores = this.scoreStore.findAll();
 
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
 
         if(Objects.equals(null,findStudentId(studentId))){
             return;
         }
-
-        // 기능 구현 (조회할 특정 과목)
         System.out.println("특정 과목의 회차별 등급을 조회합니다...");
         List<Student> students = this.studentStore.findAll();
         for (Student student : students){
@@ -176,15 +192,10 @@ public class ScoreManager {
             }
         }
         int subjectId = getRightSubjectId();
-
         List<Subject> subjects = getSelectedList();
-        checkExistSubject(scores ,subjects,subjectId,studentId);
-
+        checkExistSubject(subjects,subjectId,studentId);
     }
 
-
-    //inquire
-    //1 student가 선택한 subject list를 가져오는 함수
     public List<Subject> getSelectedList(){
         List<Student> students = this.studentStore.findAll();
         List<Subject> subjects = List.of();
@@ -192,28 +203,24 @@ public class ScoreManager {
         for (Student student : students) {
             subjects = student.getSubjects();
         }
-
         return subjects;
     }
 
 
-    //2 선택한 subject 중에서 입력된 subjectid와 같은 게 있는지 확인하는 함수
-    public void checkExistSubject(HashMap<String, ArrayList<Score>> scores ,List<Subject> subjects,int subjectId,String studentId){
+    public void checkExistSubject(List<Subject> subjects,int subjectId,String studentId){
         for(Subject subject : subjects) {
             if (String.valueOf(subjectId).equals(subject.getSubjectId())) {
-                showAllGrade(scores,subjectId,studentId);
+                showAllGrade(this.scoreStore.findAll(), subjectId,studentId);
                 System.out.println("\n등급 조회 성공!");
                 return;
             }
-
         }
         System.out.println("등록된 해당 과목이 없습니다");
     }
 
-    //3 입력된 subjectid와 같은 Score 객체에의 모든 회차와 등급 출력하는 함수
-    public void showAllGrade(HashMap<String, ArrayList<Score>> scores ,int subjectId,String studentId){
+    public void showAllGrade(Map<String, List<Score>> scores ,int subjectId,String studentId){
         for (int i = 0; i < scores.get(studentId).size(); i++) { //3
-            if(scores.get(studentId).get(i).getsubjectId() == subjectId) {//3
+            if(scores.get(studentId).get(i).getSubjectId() == subjectId) {//3
                 System.out.println("[" + subjectStore.findAll().get(i).getSubjectName() + "] 과목 등급 조회");
                 System.out.println(scores.get(studentId).get(i).getScoreId() + "회차 " + "등급 : " + scores.get(studentId).get(i).getGrade());//3
 
