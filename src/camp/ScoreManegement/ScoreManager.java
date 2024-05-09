@@ -87,7 +87,6 @@ public class ScoreManager {
     public void createScore() {
         String studentId = getStudentId(); // 관리할 수강생 고유 번호
         //예외처리 : 등록된거 또 등록하면 안 되게 =>완료
-        // 2번 학생이 등록되지 않은 사용자라고 뜨는 문제발생
         List<Student> students = this.studentStore.findAll();
         for (Student student : students){
             if (studentId.equals(student.getStudentId())) {
@@ -99,32 +98,24 @@ public class ScoreManager {
                 }
 
                 scoreStore.checkExistKey(studentId);
-
                 int subjectId = getRightSubjectId();
-
                 int scoreId = getRightScoreId();
-
                 int score = getRightScore();
-
                 ScoreToGradeConversation grade = ScoreToGradeConversation.getGrade(subjectId, score);
 
                 Score studentScore = new Score(scoreId, subjectId, score, grade);
-
                 scoreStore.save(studentId, studentScore);
-
                 System.out.println("\n점수 등록 성공!");
 
             }
-                System.out.println("캠프에 등록되지 않은 학생입니다");
-                return;
         }
-
-
+        findStudentId(studentId);
     }
     // 수강생의 과목별 회차 점수 수정
     public void updateRoundScoreBySubject() {
         //예외처리 : 등록되지 않은 과목 수정 불가하게
         HashMap<String, ArrayList<Score>> scores = this.scoreStore.findAll();
+        System.out.println("시험 점수를 수정합니다...");
         String studentId = getStudentId();
 
         List<Student> students = this.studentStore.findAll();
@@ -151,16 +142,13 @@ public class ScoreManager {
         for (int i = 0; i < scores.get(studentId).size(); i++) {
             for (Score score1 : scores.get(studentId)) {
                 if (score1.getScoreId() == (scoreId) && score1.getsubjectId() == (subjectId)) {
-                    score1.setScore(newScore); //setScore로 해보세여 !!
+                    score1.setScore(newScore);
                     ScoreToGradeConversation newGrade = ScoreToGradeConversation.getGrade(subjectId, newScore);
                     score1.setGrade(newGrade);
                     break;
                 }
             }
         }
-
-        System.out.println("시험 점수를 수정합니다...");
-        // 기능 구현
         System.out.println("\n점수 수정 성공!");
     }
 
