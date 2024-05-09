@@ -18,13 +18,13 @@ public class ScoreManager {
         sc = new Scanner(System.in);
     }
 
-    //수강생 번호 입력
+
     public String getStudentId() {
         System.out.print("\n관리할 수강생의 번호를 입력하시오...");
         return sc.next();
     }
 
-    //범위내 회차 입력 (1~10)
+
     public int getRightScoreId(){
         int scoreId;
         while (true) {
@@ -38,7 +38,7 @@ public class ScoreManager {
             System.out.println("회차는 1~10까지 입력할 수 있습니다.");
         }
     }
-    //범위내 과목id 입력 (1 ~9)
+
     public int getRightSubjectId() {
         int subjectId;
         while (true) {
@@ -52,13 +52,13 @@ public class ScoreManager {
             System.out.println("과목id는 1~9까지 입력할 수 있습니다.");
         }
     }
-    //범위내 점수 입력 (1 ~ 100)
+
     public int getRightScore() {
         int score;
         while (true) {
             System.out.print("시험점수를 입력해주세요: ");
             score = sc.nextInt();
-            sc.nextLine();//buffer cleaner
+            sc.nextLine();
 
             if(0 < score && score<101){
                 return score;
@@ -67,7 +67,7 @@ public class ScoreManager {
         }
     }
 
-    public String findStudentId(String studentId){ //수강생 고유번호 입력받으면 리스트에 있는지 확인하는 메서드
+    public String findStudentId(String studentId){
         List<Student> students = this.studentStore.findAll();
         for (Student student : students){
             if(student.getStudentId().equals(studentId)){
@@ -79,7 +79,7 @@ public class ScoreManager {
     }
 
     public void createScore() {
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId();
         List<Student> students = this.studentStore.findAll();
         for (Student student : students){
             if (studentId.equals(student.getStudentId())){
@@ -112,7 +112,7 @@ public class ScoreManager {
         }
 
     }
-    // 수강생의 과목별 회차 점수 수정
+
     public void updateRoundScoreBySubject() {
         HashMap<String, ArrayList<Score>> students = this.scoreStore.findAll();
         String studentId = getStudentId();
@@ -125,7 +125,7 @@ public class ScoreManager {
         for(int i =0; i < students.get(studentId).size();i++){
             for(Score score1 : students.get(studentId)){
                 if(score1.getScoreId() == (scoreId) && score1.getsubjectId() == (subjectId)){
-                    score1.setScore(newScore); //setScore로 해보세여 !!
+                    score1.setScore(newScore);
                     ScoreToGradeConversation newGrade = ScoreToGradeConversation.getGrade(subjectId ,newScore);
                     score1.setGrade(newGrade);
                     break;
@@ -138,53 +138,28 @@ public class ScoreManager {
         System.out.println("\n점수 수정 성공!");
     }
 
-    // 수강생의 특정 과목 회차별 등급 조회
+
     public void inquireRoundGradeBySubject() {
         HashMap<String, ArrayList<Score>> scores = this.scoreStore.findAll();
 
-        String studentId = getStudentId(); // 관리할 수강생 고유 번호
+        String studentId = getStudentId();
 
         if(Objects.equals(null,findStudentId(studentId))){
             return;
         }
 
-        // 기능 구현 (조회할 특정 과목)
+
         System.out.println("특정 과목의 회차별 등급을 조회합니다...");
         int subjectId = getRightSubjectId();
 
         List<Subject> subjects = getSelectedList();
         checkExistSubject(scores ,subjects,subjectId,studentId);
-
-
-//        //선택한 과목 id만 출력하도록 수정
-//        List<Student> students = this.studentStore.findAll(); //1
-//
-//        for (Student student : students) { //1
-//            List<Subject> subjects = student.getSubjects(); //1
-//            for(Subject subject : subjects) { //2
-//                if (String.valueOf(subjectId).equals(subject.getSubjectId())) { //2
-//                    for (int i = 0; i < scores.get(studentId).size(); i++) { //3
-//                        if(scores.get(studentId).get(i).getsubjectId() == subjectId) {//3
-//
-//                            System.out.println(scores.get(studentId).get(i).getScoreId() + "회차 " + "등급 : " + scores.get(studentId).get(i).getGrade());//3
-//
-//                        }
-//                    }
-//                    System.out.println("\n등급 조회 성공!");
-//                    return;
-//                }
-//            }
-//
-//        }
-//        System.out.println("등록된 해당 과목이 없습니다");
-
     }
 
-    //Create / inquire
 
 
-    //inquire
-    //1 student가 선택한 subject list를 가져오는 함수
+
+
     public List<Subject> getSelectedList(){
         List<Student> students = this.studentStore.findAll();
         List<Subject> subjects = List.of();
@@ -197,7 +172,7 @@ public class ScoreManager {
     }
 
 
-    //2 선택한 subject 중에서 입력된 subjectid와 같은 게 있는지 확인하는 함수
+
     public void checkExistSubject(HashMap<String, ArrayList<Score>> scores ,List<Subject> subjects,int subjectId,String studentId){
         for(Subject subject : subjects) {
             if (String.valueOf(subjectId).equals(subject.getSubjectId())) {
@@ -210,7 +185,7 @@ public class ScoreManager {
         System.out.println("등록된 해당 과목이 없습니다");
     }
 
-    //3 입력된 subjectid와 같은 Score 객체에의 모든 회차와 등급 출력하는 함수
+
     public void showAllGrade(HashMap<String, ArrayList<Score>> scores ,int subjectId,String studentId){
         for (int i = 0; i < scores.get(studentId).size(); i++) { //3
             if(scores.get(studentId).get(i).getsubjectId() == subjectId) {//3
