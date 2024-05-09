@@ -4,9 +4,9 @@ import java.util.List;
 
 public class Student {
     private String studentId;
-    private String studentName;
+    private final String studentName;
 
-    private List<Subject> subjects; // 수강한 과목 목록
+    private final List<Subject> subjects; // 수강한 과목 목록
 
 
     public Student(String studentName, List<Subject> subjects) {
