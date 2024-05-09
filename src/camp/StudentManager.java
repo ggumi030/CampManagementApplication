@@ -12,11 +12,15 @@ import java.util.Scanner;
 
 
 public class StudentManager {
-    private static final Scanner sc = new Scanner(System.in);
-    private static StudentStore studentStore = new StudentStore();
+    private final Scanner sc = new Scanner(System.in);
 
-    private static SubjectStore subjectStore = new SubjectStore();
+    private final StudentStore studentStore;
+    private final SubjectStore subjectStore;
 
+    public StudentManager(StudentStore studentStore, SubjectStore subjectStore) {
+        this.studentStore = studentStore;
+        this.subjectStore = subjectStore;
+    }
 
     public void displayStudentView() {
         while (true) {
@@ -57,7 +61,6 @@ public class StudentManager {
 
         Student student = new Student(studentName, selectedSubjects);
 
-
         if (!student.isValidSubjects()) {
             System.out.println("과목 선택을 잘못하셨습니다");
             return;
@@ -70,18 +73,15 @@ public class StudentManager {
 
     private List<Subject> selectSubjects() {
         System.out.println("과목 선택: 최소 3개의 필수과목과 2개의 선택과목을 선택해야 합니다.");
-        List<Subject> all = subjectStore.findAll();
+        List<Subject> subjects = subjectStore.findAll();
 
         System.out.println("필수 과목: ");
-        List<Subject> mandatoryList = all.stream().filter(Subject::isMandatory).toList();
-        for (Subject subject : mandatoryList) {
-            System.out.printf("%s) %s ", subject.getSubjectId(), subject.getSubjectName());
-        }
+        subjects.stream().filter(Subject::isMandatory)
+                .forEach(subject -> System.out.printf("%s) %s ", subject.getSubjectId(), subject.getSubjectName()));
+
         System.out.println("\n선택 과목: ");
-        List<Subject> choiceList = all.stream().filter(Subject::isChoice).toList();
-        for (Subject subject : choiceList) {
-            System.out.printf("%s) %s ", subject.getSubjectId(), subject.getSubjectName());
-        }
+        subjects.stream().filter(Subject::isChoice)
+                .forEach(subject -> System.out.printf("%s) %s ", subject.getSubjectId(), subject.getSubjectName()));
 
         System.out.print("\n선택할 과목의 번호를 입력하세요 (예: 1 2 3 6 7): ");
         sc.nextLine();
@@ -89,10 +89,10 @@ public class StudentManager {
 
         List<Subject> selectedSubjects = new ArrayList<>();
 
-        for (String number : inputs) {
-            Optional<Subject> subjectOptional = subjectStore.findById(number);
+        for (String subjectId : inputs) {
+            Optional<Subject> subjectOptional = subjectStore.findById(subjectId);
             if (subjectOptional.isEmpty()) {
-                System.out.println("잘못된 과목 번호입니다: " + number);
+                System.out.println("잘못된 과목 번호입니다: " + subjectId);
                 return null;
             }
             selectedSubjects.add(subjectOptional.get());
