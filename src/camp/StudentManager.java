@@ -107,4 +107,5 @@ public class StudentManager {
             System.out.printf("%6s번 | %4s\n", student.getStudentId(), student.getStudentName());
         }
     }
+
 }
