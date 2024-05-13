@@ -1,10 +1,12 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import camp.CampManagementApplication;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcomee!");
-
+        CampManagementApplication campManagementApplication = new CampManagementApplication();
+        try {
+            campManagementApplication.displayMainView();
+        } catch (InterruptedException e) {
+            System.out.println("\n오류 발생!\n프로그램을 종료합니다.");
+        }
     }
 }
